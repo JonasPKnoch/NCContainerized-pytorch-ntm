@@ -21,10 +21,12 @@ LOGGER = logging.getLogger(__name__)
 
 from tasks.copytask import CopyTaskModelTraining, CopyTaskParams
 from tasks.repeatcopytask import RepeatCopyTaskModelTraining, RepeatCopyTaskParams
+from tasks.nctest_copytask import NCTestCopyTaskModelTraining, NCTestCopyTaskParams
 
 TASKS = {
     'copy': (CopyTaskModelTraining, CopyTaskParams),
-    'repeat-copy': (RepeatCopyTaskModelTraining, RepeatCopyTaskParams)
+    'repeat-copy': (RepeatCopyTaskModelTraining, RepeatCopyTaskParams),
+    'nctest-copy': (NCTestCopyTaskModelTraining, NCTestCopyTaskParams),
 }
 
 

@@ -14,6 +14,7 @@ import attr
 import argcomplete
 import torch
 import numpy as np
+import wandb
 
 
 LOGGER = logging.getLogger(__name__)
@@ -162,7 +163,7 @@ def evaluate(net, criterion, X, Y):
     return result
 
 
-def train_model(model, args):
+def train_model(model, args, run):
     num_batches = model.params.num_batches
     batch_size = model.params.batch_size
 
@@ -193,6 +194,9 @@ def train_model(model, args):
                         batch_num, mean_loss, mean_cost, mean_time)
             start_ms = get_ms()
 
+            #Log with WandB
+            run.log({"batch_num": batch_num, "mean_loss": mean_loss, "mean_cost": mean_cost, "mean_time": mean_time})
+
         # Checkpoint
         if (args.checkpoint_interval != 0) and (batch_num % args.checkpoint_interval == 0):
             save_checkpoint(model.net, model.params.name, args,
@@ -215,6 +219,10 @@ def init_arguments():
                         help="Path for saving checkpoint data (default: './')")
     parser.add_argument('--report-interval', type=int, default=REPORT_INTERVAL,
                         help="Reporting interval")
+    parser.add_argument('--wandb-project', type=str, default="NeuralComputerTesting",
+                        help="Weights & Biases Project")
+    parser.add_argument('--wandb-api-key', type=str, default="",
+                        help="Weights & Biases Project API Key")
 
     argcomplete.autocomplete(parser)
 
@@ -269,15 +277,19 @@ def main():
 
     # Initialize arguments
     args = init_arguments()
+    config = vars(args)
+    api_key = config["wandb-api-key"]
+    del config["wandb-api-key"]
+    wandb.login(key=api_key)
+    with wandb.init(project=args.wandb_project, config=config) as run:
+        # Initialize random
+        init_seed(args.seed)
 
-    # Initialize random
-    init_seed(args.seed)
+        # Initialize the model
+        model = init_model(args)
 
-    # Initialize the model
-    model = init_model(args)
-
-    LOGGER.info("Total number of parameters: %d", model.net.calculate_num_params())
-    train_model(model, args)
+        LOGGER.info("Total number of parameters: %d", model.net.calculate_num_params())
+        train_model(model, args, run)
 
 
 if __name__ == '__main__':

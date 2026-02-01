@@ -6,6 +6,7 @@ import torch
 from torch import nn
 from torch import optim
 import numpy as np
+import string
 
 from ntm.aio import EncapsulatedNTM
 
@@ -58,7 +59,7 @@ def dataloader(num_batches, batch_size, data_path):
 
 @attrs
 class NCTestCopyTaskParams(object):
-    name = attrib(default="copy-task")
+    name = attrib(default="copy-task-{}".format(''.join(random.choices(string.ascii_letters + string.digits, 4))))
     controller_size = attrib(default=100, convert=int)
     controller_layers = attrib(default=1,convert=int)
     num_heads = attrib(default=1, convert=int)

@@ -48,4 +48,4 @@ COPY . .
 EXPOSE 8002
 
 # Run the application.
-CMD python train.py --checkpoint-path checkpoints --task copy
+CMD python train.py --checkpoint-path checkpoints --task copy -pnum_batches=1

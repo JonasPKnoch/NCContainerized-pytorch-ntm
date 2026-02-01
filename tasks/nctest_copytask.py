@@ -59,13 +59,14 @@ def dataloader(num_batches, batch_size, data_path):
 
 @attrs
 class NCTestCopyTaskParams(object):
-    name = attrib(default="copy-task-{}".format(''.join(random.choices(string.ascii_letters + string.digits, 4))))
+    name = attrib(default="copy-task-{}".format(''.join(random.choices(string.ascii_letters + string.digits, k=4))))
     controller_size = attrib(default=100, convert=int)
     controller_layers = attrib(default=1,convert=int)
     num_heads = attrib(default=1, convert=int)
     memory_n = attrib(default=128, convert=int)
     memory_m = attrib(default=20, convert=int)
     num_batches = attrib(default=50000, convert=int) #Must be 50000
+    num_tests = attrib(default=1000, convert=int)
     batch_size = attrib(default=1, convert=int)
     data_path = attrib(default="./tasks/data/copy_task_train.txt", convert=str)
     test_data_path = attrib(default="./tasks/data/copy_task_test.txt", convert=str)
@@ -115,7 +116,7 @@ class NCTestCopyTaskModelTraining(object):
     
     @test_dataloader.default
     def default_test_dataloader(self):
-        return dataloader( self.params.num_batches, self.params.batch_size, self.params.test_data_path)
+        return dataloader( self.params.num_tests, self.params.batch_size, self.params.test_data_path)
 
     @criterion.default
     def default_criterion(self):

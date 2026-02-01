@@ -37,6 +37,7 @@ RUN adduser \
 RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python -m pip install -r requirements.txt
+RUN wandb login
 
 # Switch to the non-privileged user to run the application.
 USER appuser
@@ -48,4 +49,4 @@ COPY . .
 EXPOSE 8002
 
 # Run the application.
-CMD python train.py --checkpoint-path checkpoints --task copy -pnum_batches=1
+CMD bash train.sh

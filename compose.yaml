@@ -16,6 +16,8 @@ services:
       - 8002:8002
     volumes:
       - ./checkpoints:/app/checkpoints
+    environment:
+      - WANDB_API_KEY=${WANDB_API_KEY_NC_TESTING}
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to

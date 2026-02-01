@@ -67,6 +67,7 @@ class NCTestCopyTaskParams(object):
     num_batches = attrib(default=50000, convert=int) #Must be 50000
     batch_size = attrib(default=1, convert=int)
     data_path = attrib(default="./tasks/data/copy_task_train.txt", convert=str)
+    test_data_path = attrib(default="./tasks/data/copy_task_test.txt", convert=str)
     rmsprop_lr = attrib(default=1e-4, convert=float)
     rmsprop_momentum = attrib(default=0.9, convert=float)
     rmsprop_alpha = attrib(default=0.95, convert=float)
@@ -92,6 +93,7 @@ class NCTestCopyTaskModelTraining(object):
     params = attrib(default=Factory(NCTestCopyTaskParams))
     net = attrib()
     dataloader = attrib()
+    test_dataloader = attrib()
     criterion = attrib()
     optimizer = attrib()
     sequence_width = 8
@@ -109,6 +111,10 @@ class NCTestCopyTaskModelTraining(object):
     @dataloader.default
     def default_dataloader(self):
         return dataloader( self.params.num_batches, self.params.batch_size, self.params.data_path)
+    
+    @test_dataloader.default
+    def default_test_dataloader(self):
+        return dataloader( self.params.num_batches, self.params.batch_size, self.params.test_data_path)
 
     @criterion.default
     def default_criterion(self):

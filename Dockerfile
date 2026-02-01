@@ -48,4 +48,4 @@ COPY . .
 EXPOSE 8002
 
 # Run the application.
-CMD python train.py --checkpoint-path checkpoints --task nctest-copy
+CMD python train.py --checkpoint-path checkpoints --task copy
